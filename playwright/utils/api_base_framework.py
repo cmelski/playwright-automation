@@ -1,0 +1,38 @@
+import json
+
+import requests
+from playwright.sync_api import Playwright
+
+orders_payload = {
+    "orders": [
+        {
+            "country": "Canada",
+            "productOrderedId": "67a8df56c0d3e6622a297ccd"
+        }
+    ]
+}
+
+
+class APIBase:
+
+    def get_token(self, playwright: Playwright, user_credentials):
+        user_email = user_credentials['user_email']
+        password = user_credentials['password']
+        api_request_context = playwright.request.new_context(base_url='https://rahulshettyacademy.com/')
+        response = api_request_context.post(url='api/ecom/auth/login',
+                                            data={'userEmail': user_email, 'userPassword': password})
+        assert response.ok
+        token = response.json()['token']
+        return token
+
+    def create_order(self, playwright: Playwright, user_credentials):
+        token = self.get_token(playwright, user_credentials)
+        api_request_context = playwright.request.new_context(base_url='https://rahulshettyacademy.com/')
+        headers = {'Content-Type': 'application/json',
+                   'Authorization': token
+                   }
+        response = api_request_context.post(url='api/ecom/order/create-order',
+                                            data=json.dumps(orders_payload), headers=headers)
+        assert response.status == 201
+        order_id = response.json()['orders'][0]
+        return order_id
