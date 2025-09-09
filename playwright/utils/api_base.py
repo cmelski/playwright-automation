@@ -1,4 +1,5 @@
 import json
+import os
 
 import requests
 from playwright.sync_api import Playwright
@@ -16,9 +17,10 @@ orders_payload = {
 class APIBase:
 
     def get_token(self, playwright: Playwright):
+        password = os.environ.get('PASS')
         api_request_context = playwright.request.new_context(base_url='https://rahulshettyacademy.com/')
         response = api_request_context.post(url='api/ecom/auth/login',
-                                            data={'userEmail': 'c_melski@yahoo.com', 'userPassword': 'bestDAY2011'})
+                                            data={'userEmail': 'c_melski@yahoo.com', 'userPassword': password})
         assert response.ok
         token = response.json()['token']
         return token

@@ -1,4 +1,5 @@
 import json
+import os
 import time
 import requests
 import pytest
@@ -8,8 +9,9 @@ from utils.api_base import APIBase
 
 
 def create_order_api():
+    authorization = os.environ.get('AUTH')
     headers = {'Content-Type': 'application/json',
-               'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2ODU1YzljMzBlNzA2OGQzOTgyMWQ3OTkiLCJ1c2VyRW1haWwiOiJjX21lbHNraUB5YWhvby5jb20iLCJ1c2VyTW9iaWxlIjo2NTkxMzc0MTQ5LCJ1c2VyUm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNzUwNjAwMDg4LCJleHAiOjE3ODIxNTc2ODh9.neWN5_6LsgrQ-WKvuU5gJK93Afk_m6SrJ0R3Ei4dWw0'
+               'Authorization': authorization
                }
 
     payload = {
